@@ -1,0 +1,12 @@
+-- 1. Describe and retrieve all data from EMPLOYEES table
+DESC hr.employees;
+SELECT * FROM hr.employees;
+
+-- 2. Describe and retrieve all data from DEPARTMENTS table
+DESC hr.departments;
+SELECT * FROM hr.departments;
+
+-- 3. First name and department ID for employee with EMPLOYEE_ID 101
+SELECT first_name, department_id
+FROM hr.employees
+WHERE employee_id = 101;
