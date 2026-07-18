@@ -1,0 +1,58 @@
+-- 1. Current system date
+select sysdate as "Date" from dual;
+
+-- 2. 15.5% salary increase, rounded
+select empno, Ename, sal, Round(sal*1.155) as new_sal from Emp5;
+
+-- 3. Salary increase amount
+select empno, Ename, sal, Round(sal*1.155)-sal as Increase from Emp5;
+
+-- 4. Initcap name and length for names starting with J, A, or M
+select initcap(ename) as Name, length(ename) as Name_len from Emp5
+where ename like 'j%' or ename like 'a%' or ename like 'm%' order by ename;
+
+-- 5. Prompt for starting letter
+select ename from Emp5 where ename like '&letter%';
+
+-- 6. Months employed, rounded up
+select ename, ceil(months_between(sysdate, to_date(hiredate,'dd-mm-yyyy'))) as Months_Worked
+from Emp5 order by Months_Worked;
+
+-- 7. Formatted "earns X monthly but wants Y" string
+select ename||' earns '||sal||'monthly but wants'||(sal*3) as "Dream_Salaries" from Emp5;
+
+-- 8. Salary left-padded with $ to width 15
+select ename, lpad(sal,15,'$') as SALARY from Emp5;
+
+-- 9. Hire date and salary review date (first Monday after 6 months), custom date format
+SELECT ename,
+  TO_CHAR(TO_DATE(hiredate,'DD-MM-YYYY'), 'fmDay, "the" Ddspth "of" fmMonth, YYYY') AS "HIREDATE",
+  TO_CHAR(NEXT_DAY(ADD_MONTHS(TO_DATE(hiredate,'DD_MM_YYYY'), 6), 'MONDAY'),
+    'fmDay, "the" Ddspth "of" fmMonth, YYYY') AS "REVIEW"
+FROM Emp5;
+
+-- 10. Last name, hire date, and day of week, ordered by day of week starting Monday
+select ename, hiredate, To_char(To_Date(hiredate,'DD-MM-YYYY'),'fmDay') as "DAY"
+from emp5 order by To_char(To_Date(hiredate,'DD-MM-YYYY'),'D');
+
+-- 11. Commission with NVL fallback text
+select ename, NVL(To_char(comm),'NO Commission') as "COMM" from Emp5;
+
+-- 12. First 8 chars of name + asterisks representing salary in thousands
+select RPAD(substr(ename,1,8),8) || RPAD(' ',1) || RPAD('*',Trunc(sal/1000),'*') as "EMPLOYEES_AND_THEIR_SALARIES"
+from emp5 order by sal desc;
+
+-- 13. Grade by job using DECODE
+select ename, job, decode(upper(job), 'PRESIDENT', 'A', 'MANAGER', 'B', 'SALESMAN', 'C', 'CLERK', 'D', 'Unknown') as "grade"
+from EMP5;
+
+-- 14. Grade by job using CASE
+select ename, job,
+  case upper(job)
+    when 'PRESIDENT' then 'A'
+    when 'MANAGER' then 'B'
+    when 'SALESMAN' then 'C'
+    when 'CLERK' then 'D'
+    else 'UNKNOWN'
+  end as "GRADE"
+from Emp5;
