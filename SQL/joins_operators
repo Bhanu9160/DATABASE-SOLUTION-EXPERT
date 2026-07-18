@@ -1,0 +1,60 @@
+-- 1. NATURAL JOIN between employees and departments
+select employee_id, first_name, salary, department_id, location_id
+from hr.employees natural join hr.departments;
+
+-- 2. INNER JOIN filtered to job_id = 'SA_MAN'
+select e.job_id, e.manager_id, e.salary, e.commission_pct, d.department_name
+from hr.employees e
+inner join hr.departments d on e.department_id = d.department_id
+where job_id = 'SA_MAN';
+
+-- 4. Self-join: employee and their manager
+select e.first_name||' '||e.last_name as "EMPLOYEE", e.employee_id as "EMP#",
+  m.first_name||' '||m.last_name as "MANAGER", m.employee_id as "MGR#"
+from hr.employees e
+join hr.employees m on e.manager_id = m.employee_id;
+
+-- 5. Self-join rewritten as FULL OUTER JOIN
+select e.first_name||' '||e.last_name as "EMPLOYEE", e.employee_id as "EMP#",
+  m.first_name||' '||m.last_name as "MANAGER", m.employee_id as "MGR#"
+from hr.employees e
+full outer join hr.employees m on e.manager_id = m.employee_id;
+
+-- 7. RIGHT OUTER JOIN: all departments, even with no employees
+select e.first_name||' '||e.last_name as ename, d.department_name as dname
+from hr.employees e
+right outer join hr.departments d on e.department_id = d.department_id;
+
+-- 8. Employees hired before their managers
+select e.first_name||' '||e.last_name as employee_name, e.hire_date as employee_hire_date,
+  m.first_name||' '||m.last_name as manager_name, m.hire_date as manager_hire_date
+from hr.employees e
+join hr.employees m on e.manager_id = m.employee_id
+where e.hire_date < m.hire_date;
+
+-- 9. JOIN ... USING
+select e.employee_id, e.first_name||' '||e.last_name as NAME, d.department_name, d.location_id
+from hr.employees e
+join hr.DEPARTMENTS d using (department_id);
+
+-- 10. Employee name, salary, manager_id, department_name for salary > 2000
+select e.first_name||' '||e.last_name as NAME, e.salary, e.manager_id, d.department_name
+from hr.employees e
+join hr.departments d on e.manager_id=d.manager_id
+where e.salary>2000;
+
+-- 11. LEFT OUTER JOIN: all employees with department info
+select e.employee_id, e.first_name||' '||e.last_name, e.job_id, e.department_id,
+  d.DEPARTMENT_NAME, d.location_id
+from hr.employees e
+left join hr.departments d on e.manager_id=d.manager_id;
+
+-- 12. RIGHT OUTER JOIN: all departments, even with no employees
+select e.first_name||' '||e.last_name as NAME, d.department_name
+from hr.employees e
+right join hr.DEPARTMENTS d on e.department_id=d.department_id;
+
+-- 13. FULL OUTER JOIN: all employees and all departments, unmatched rows included
+select e.employee_id, d.DEPARTMENT_name, d.location_id
+from hr.employees e
+full outer join hr.departments d on e.department_id=d.department_id;
