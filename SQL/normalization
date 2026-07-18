@@ -1,0 +1,64 @@
+## Normalization — Hands-on Assignment Answers
+
+### Question 1
+Observe the structure of a given EMPLOYEE table as below and suggest if this table can be
+further Normalized: `EMPNO, ENAME, SAL, DEPTNO, DNAME, LOC`. Explain what normal form
+this table is and how you can make this into next normal form.
+
+**Primary Key:** `EMPNO` (single column)
+
+This table is in 2NF. Since the primary key is a single column, there is no possibility of a partial
+dependency, so 2NF is automatically satisfied.
+
+However, it violates 3NF because of a transitive dependency:
+`EMPNO → DEPTNO → DNAME, LOC`
+
+DNAME and LOC do not depend directly on EMPNO. They depend on DEPTNO, which is itself a
+non-key column. This is a transitive dependency and it breaks 3NF.
+
+To move it into 3NF, split into two tables:
+Now DNAME and LOC depend only on DEPTNO, which is the key of the new DEPARTMENT
+table. This removes the transitive dependency and satisfies 3NF.
+
+---
+
+### Question 2
+Observe the structure of a given STUDENT table as below and suggest if this table can be further
+Normalized: `ROLLNO, NAME, AGE, EXAM, MARKS, GRADE`. Explain what normal form this
+table is and how you can make this into next normal form.
+
+**Primary Key:** `(ROLLNO, EXAM)` — composite key, because a student can appear for multiple
+exams.
+
+This table is in 1NF only. It violates 2NF because of a partial dependency:
+`ROLLNO → NAME, AGE`
+
+NAME and AGE depend only on ROLLNO, not on the full key (ROLLNO, EXAM). A student's
+name and age do not change based on which exam they take, so these columns only need part of
+the key. This is a partial dependency and it violates 2NF.
+
+There is also a transitive dependency, since GRADE is derived from MARKS and not from the key
+directly.
+
+To fix this, decompose into:
+Now NAME and AGE depend on the full key of STUDENT (ROLLNO), MARKS depends on the
+full key of EXAM_RESULT (ROLLNO, EXAM), and GRADE is derived separately from MARKS.
+
+---
+
+### Question 3
+Observe the structure of a given EMPLOYEE table (Project Assignment) and suggest what kind of
+problem this table has and how to solve the problem: `EMPNO, PROJECT_NO, NO_OF_DAYS, CUSTOMERNAME`.
+
+In the above table EMPNO and PROJECT_NO both are together a composite primary key.
+
+**Primary Key:** `(EMPNO, PROJECT_NO)` — composite key.
+
+This table violates 2NF because of a partial dependency:
+`PROJECT_NO → CUSTOMERNAME`
+
+CUSTOMERNAME depends only on PROJECT_NO, not on the full key (EMPNO,
+PROJECT_NO). The customer for a project stays the same no matter which employee is working
+on it, so CUSTOMERNAME only needs part of the key. This causes redundancy: if 5 employees
+work on the same project, CUSTOMERNAME repeats 5 times, and it can lead to update, insertion
+and deletion anomalies.
