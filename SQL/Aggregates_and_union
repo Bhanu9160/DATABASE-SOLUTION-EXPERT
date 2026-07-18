@@ -1,0 +1,23 @@
+-- 1. Total salary per job_id, pivoted by department (10, 20, 30) plus overall total
+select job_id,
+  sum(decode(department_id,10,salary)) as dept10,
+  sum(decode(department_id,20,salary)) as dept20,
+  sum(decode(department_id,30,salary)) as dept30,
+  sum(salary) as Total
+from hr.employees
+where department_id in (10,20,30)
+group by job_id;
+
+-- 2. Total salary per department, plus a grand-total row via UNION
+select to_char(department_id) as category, sum(salary) as total_salary
+from hr.employees
+group by department_id
+union
+select 'TOTAL', sum(salary) from hr.employees;
+
+-- 3. job_id and department_id for departments 10, 20, and 30 via UNION
+select job_id, department_id from hr.employees where department_id = 10
+union
+select job_id, department_id from hr.employees where department_id = 20
+union
+select job_id, department_id from hr.employees where department_id = 30;
